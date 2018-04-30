@@ -6,7 +6,6 @@ new Vue({
     },
     methods: {
         updateData: function(data){
-            debugger;
             if(data && data.newValue){
                 var i;
                 for(i = 0; i < data.newValue.length; i++){
