@@ -2,10 +2,12 @@ new Vue({
     el: '#app',
     data: {
         agentMessagesValue:0,
-        consumerMessagesValue:0
+        consumerMessagesValue:0,
+        agentNote:"",
+        visitorId:""
     },
     methods: {
-        updateData: function(data){
+        updateMessagesData: function(data){
             if(data && data.newValue){
                 var i;
                 for(i = 0; i < data.newValue.length; i++){
@@ -19,7 +21,17 @@ new Vue({
             }
         },
         onSendNotificationClicked: function() {
-            alert("Submit");
+            alert("save agent note to local storage");
+            const noteStore = `${'LEAgentNote'}${this.visitorId}`;
+            localStorage.setItem(noteStore, this.agentNote);
+        },
+        setAgentNote: function(data) {
+            debugger;
+            if(data && data.newValue){
+                this.visitorId = data.newValue;
+                const noteStore = `${'LEAgentNote'}${this.visitorId}`;
+                this.agentNote = localStorage.getItem(noteStore) || "";
+            }
         }
 
     },
@@ -33,6 +45,7 @@ new Vue({
     },
     created(){
         lpTag.agentSDK.init({});
-        lpTag.agentSDK.bind("chatTranscript.lines", this.updateData);
+        lpTag.agentSDK.bind("chatTranscript.lines", this.updateMessagesData);
+        lpTag.agentSDK.bind("visitorInfo.visitorId", this.setAgentNote);
     }
 });
